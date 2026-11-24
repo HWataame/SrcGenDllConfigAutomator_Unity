@@ -4,13 +4,14 @@ Unityのコンパイル関連の処理を提供するクラス
 
 CompileUtil.cs
 ────────────────────────────────────────
-バージョン: 1.0.0
+バージョン: 1.1.0
 2026 Wataame(HWataame)
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 */
-using UnityEditor;
-using UnityEditor.Callbacks;
+using System.Diagnostics;
+using System.Runtime.InteropServices;
 using UnityEditor.Compilation;
+#pragma warning disable IDE0063
 
 namespace HW.SrcGenDllConfigurationAutomator
 {
@@ -20,9 +21,20 @@ namespace HW.SrcGenDllConfigurationAutomator
     internal static class CompileUtil
     {
         /// <summary>
-        /// 再コンパイル処理用のセッションステートのキー文字列
+        /// ユーザーが作業しているウィンドウのハンドルを取得する
         /// </summary>
-        private const string RecompileSessionKey = "HW.SrcGenDllLabelAutomator.CompileUtil.Recompile";
+        /// <returns>ユーザーが作業しているウィンドウのハンドル</returns>
+        [DllImport("user32.dll", SetLastError = true)]
+        private static extern nint GetForegroundWindow();
+
+        /// <summary>
+        /// ウィンドウを生成したスレッドのIDとプロセスのIDを取得する
+        /// </summary>
+        /// <param name="hWnd">ウィンドウのハンドル</param>
+        /// <param name="processId">ウィンドウを生成したプロセスのID</param>
+        /// <returns>ウィンドウを生成したスレッドのID</returns>
+        [DllImport("user32.dll", SetLastError = true)]
+        private static extern uint GetWindowThreadProcessId(nint hWnd, out uint processId);
 
 
         /// <summary>
@@ -30,65 +42,30 @@ namespace HW.SrcGenDllConfigurationAutomator
         /// </summary>
         public static void RequestRecompile()
         {
-            SessionState.SetBool(RecompileSessionKey, true);
-
-            EditorApplication.update += ProcessProgressBar;
-            CompilationPipeline.compilationFinished += OnCompilationFinished;
-
-            ProcessProgressBar();
             CompilationPipeline.RequestScriptCompilation();
-        }
 
-        /// <summary>
-        /// 進捗バーウィンドウを処理する
-        /// </summary>
-        private static void ProcessProgressBar()
-        {
-            if (SessionState.GetBool(RecompileSessionKey, false))
+            var currentForegroundWindow = GetForegroundWindow();
+            if (currentForegroundWindow != 0 &&
+                GetWindowThreadProcessId(currentForegroundWindow, out var foregroundProcessId) != 0 &&
+                foregroundProcessId == Process.GetCurrentProcess().Id)
             {
-                EditorUtility.DisplayProgressBar(
-                    "SourceGenerator DLL Configuration Automator",
-                    "Waiting Recompile",
-                    0);
+                // UnityEditorのウィンドウがアクティブである場合は
+                // 一瞬で消えるターミナルを出して一瞬非アクティブにする
+                // (反応性の向上策)
+                using (var process = new Process())
+                {
+                    var psi = new ProcessStartInfo("conhost.exe")
+                    {
+                        UseShellExecute = false,
+                        CreateNoWindow = false
+                    };
+                    psi.ArgumentList.Add("cmd");
+                    psi.ArgumentList.Add("/c");
+                    process.StartInfo = psi;
+
+                    process.Start();
+                }
             }
-            else
-            {
-                CloseProgressBar();
-            }
-        }
-
-        /// <summary>
-        /// リロード完了時の処理
-        /// </summary>
-        [DidReloadScripts]
-        private static void OnReloaded()
-        {
-            if (SessionState.GetBool(RecompileSessionKey, false))
-            {
-                CloseProgressBar();
-            }
-        }
-
-        /// <summary>
-        /// コンパイル完了時の処理
-        /// </summary>
-        private static void OnCompilationFinished(object obj)
-        {
-            CompilationPipeline.compilationFinished -= OnCompilationFinished;
-
-            if (!EditorApplication.isCompiling) CloseProgressBar();
-        }
-
-        /// <summary>
-        /// 進捗バーウィンドウを閉じる
-        /// </summary>
-        private static void CloseProgressBar()
-        {
-            SessionState.EraseBool(RecompileSessionKey);
-            EditorUtility.ClearProgressBar();
-
-            EditorApplication.update -= ProcessProgressBar;
-            CompilationPipeline.compilationFinished -= OnCompilationFinished;
         }
     }
 }
