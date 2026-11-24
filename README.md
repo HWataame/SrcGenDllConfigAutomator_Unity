@@ -1,0 +1,2 @@
+# SrcGenDllConfigAutomator_Unity
+UnityプロジェクトへのSourceGeneratorのdll導入後の設定を自動化するエディター拡張
