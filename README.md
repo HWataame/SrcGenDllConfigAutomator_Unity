@@ -1,22 +1,22 @@
 # SourceGenerator DLL Configuration Automator
 
 ## 概要 / Overview
-マーカーアセットを配置したフォルダー以下のSourceGenerator用のdllにラベル付与とインポート設定を行う。
+マーカーアセットを配置したフォルダー以下のSourceGenerator用のdllにラベル付与とインポート設定を行う。  
 This automator sets asset label and configures import settings to DLL in directory contains marker asset or in subfolders of that directory.
 
 
 ## 対応環境 / Requirements
-2022.3.12f1以降(6000.6.10f1で動作確認済)
+2022.3.12f1以降(6000.6.10f1で動作確認済)  
 2022.3.12f1 and later (developed in 6000.6.10f1)
 
 
 ## 使用方法 / English "How to use" is below this
-SourceGenerator用のDLLがあるフォルダーにアセット作成メニューから「`SourceGenerator補助/dllフォルダーマーカー (DLL Folder Marker Asset)`」を作成すると、そのフォルダー以下のマネージドDLLにアセットラベルが付与されます。
+SourceGenerator用のDLLがあるフォルダーにアセット作成メニューから「`SourceGenerator補助/dllフォルダーマーカー (DLL Folder Marker Asset)`」を作成すると、そのフォルダー以下のマネージドDLLにアセットラベルが付与されます。  
 また、対象のフォルダーに入っているDLLに「`AvoidAutoSrcGenConfig`」ラベルが付与されている場合は処理されません。
 
 ## How to use / 日本語の「使用方法」は上にあります
-Create "Marker Asset" from 「`SourceGenerator補助/dllフォルダーマーカー (DLL Folder Marker Asset)`」 at folder contains DLL for SourceGenerator.
-This automator sets asset label to dll in directory contains marker asset or in subfolders.
+Create "Marker Asset" from 「`SourceGenerator補助/dllフォルダーマーカー (DLL Folder Marker Asset)`」 at folder contains DLL for SourceGenerator.  
+This automator sets asset label to dll in directory contains marker asset or in subfolders.  
 If targeted DLL contains `AvoidAutoSrcGenConfig` label, this automator ignore that DLL.
 
 
