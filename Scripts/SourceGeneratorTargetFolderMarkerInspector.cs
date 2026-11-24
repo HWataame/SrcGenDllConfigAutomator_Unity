@@ -4,7 +4,7 @@ SourceGeneratorTargetFolderMarkerのインスペクター
 
 SourceGeneratorTargetFolderMarkerInspector.cs
 ────────────────────────────────────────
-バージョン: 1.0.0
+バージョン: 1.1.0
 2026 Wataame(HWataame)
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 */

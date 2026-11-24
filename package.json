@@ -1,6 +1,6 @@
 {
   "name": "com.hw.source_generator_dll_configuration_automator",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "displayName": "SourceGenerator DLL Configuration Automator",
   "description": "\u30de\u30fc\u30ab\u30fc\u30a2\u30bb\u30c3\u30c8\u3092\u914d\u7f6e\u3057\u305f\u30d5\u30a9\u30eb\u30c0\u30fc\u4ee5\u4e0b\u306eSourceGenerator\u7528\u306edll\u306b\u30e9\u30d9\u30eb\u4ed8\u4e0e\u3068\u30a4\u30f3\u30dd\u30fc\u30c8\u8a2d\u5b9a\u3092\u884c\u3046\u3002\n\nThis automator sets asset label and configures import settings to DLL in directory contains marker asset or in subfolders of that directory.",
   "unity": "2022.3",
@@ -14,7 +14,7 @@
   "_repository": {
     "url": "https://github.com/HWataame/SrcGenDllConfigAutomator_Unity.git",
     "type": "git",
-    "revision": "6bc44f91b1685e5c8842aef992173215aec556aa"
+    "revision": "0109af3181f4430a24502bd700ad4654c7d752ed"
   },
   "unityRelease": "12f1"
 }
